@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState , useEffect} from "react"
 import { TodoProvider } from "./context";
 
 function App() {
@@ -22,6 +22,24 @@ function App() {
   const toggleComplete = (id) => {
     setTodos(prev=> prev.map( (prevTodo) => (prevTodo.id === id ? {...prevTodo, completed :!prevTodo.completed } : prevTodo)))
   }
+
+
+  // local storage : 
+  // jb tk react pe hai tb tk local storage access kr skte hai as it is clint side rendering : 
+  // ! localstorage stores and sends data in the fomr of a string : 
+  useEffect(() => {
+    const todos = JSON.parse(localStorage.getItem("todos"))
+
+    if( todos && todos.length > 0 ){
+      setTodos(todos)
+    }
+  }, [])
+
+  useEffect( ()=> {
+    // this takes keys , values : keys should be same while getting : 
+    localStorage.setItem("todos" , JSON.stringify(todos))
+  })
+  
 
   return (
     <TodoProvider value = {{ todos , addTodo , updateTodo , deleteTodo , toggleComplete}}>
